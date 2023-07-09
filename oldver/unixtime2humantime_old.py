@@ -5,7 +5,6 @@ import os
 import glob
 from tqdm import tqdm
 
-print("tolist.py\n")
 
 # csvを開くときの各種オプション
 pd.set_option("display.max_rows", None)
@@ -41,27 +40,31 @@ shutil.copyfile(read_filepath, write_filepath)
 # dataflameでcsvを読み込み
 df = pd.read_csv(write_filepath, header=0)
 
-# timestamp列の値をリストに格納
-df_list = list(df["timestamp"])
-df_check = list(df["timestamp"])
+
+num = df.shape[0]  # timestampの数
+print("\nnumber of data>", num)
 
 
-# print(df_check)
+# timestampの数だけ繰り返す
+for i in tqdm(range(num)):
 
-number = len(df_list)
+    # 行i,列timestampをvalに代入
+    val = df.at[i, "timestamp"]
 
-# リストの値を変換
-for j in tqdm(range(number)):
-    df_list[j] = datetime.datetime.fromtimestamp(df_list[j])
+    # unixtimeをJSTに変換
+    time2jst = datetime.datetime.fromtimestamp(val)
+
+    # unixtimeをJSTに置換
+    df.replace({"timestamp": {val: time2jst}}, inplace=True)
+
+    i += 1
 
 
-for i in tqdm(range(number)):
-    df.replace(df_check[i], df_list[i], inplace=True)
-
+# 変換・置換後のデータを保存
 df.to_csv(write_filepath)
 
+
 print("Just Finished!")
+
 print("\nInput file:\t", read_filepath)
 print("Output file:\t", write_filepath)
-
-input()
