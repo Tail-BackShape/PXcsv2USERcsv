@@ -13,5 +13,5 @@ git clone https://github.com/Tail-BackShape/PXcsv2USERcsv.git
 # ディレクトリに移動
 cd PXcsv2USERcsv
 
-# 依存関係をインストール
+# 実行
 python unixtime2humantime input.csv #任意のcsv
